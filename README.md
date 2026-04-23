@@ -1,5 +1,27 @@
-# Vue 3 + Vite
+# Arlo Coffee Vue UI
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Ứng dụng Vue + Vite quản lý quán cà phê với các luồng:
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+- đăng nhập bằng dữ liệu JSON
+- bán hàng
+- hóa đơn
+- sản phẩm
+- nhập hàng
+- báo cáo doanh thu theo thời gian và theo nhân viên
+
+## Chạy local
+
+```bash
+npm install
+npm run dev
+```
+
+## Deploy GitHub Pages
+
+Project đã được cấu hình để deploy tự động lên GitHub Pages qua GitHub Actions.
+
+- workflow: `.github/workflows/deploy.yml`
+- router dùng `hash mode` để không lỗi khi refresh trên Pages
+- `vite.config.js` tự đặt `base` là `/CapheYummy/` khi chạy trên GitHub Actions
+
+Sau khi push lên branch mặc định của repo `kienlee1990-jpg/CapheYummy`, workflow sẽ build và publish lên GitHub Pages.

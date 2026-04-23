@@ -1,0 +1,28 @@
+[
+  {
+    "id": "NH-001",
+    "receiptDate": "2026-04-21",
+    "productId": "SP-002",
+    "productName": "Cold Brew Cam",
+    "quantity": 20,
+    "unitCost": 28000,
+    "totalCost": 560000,
+    "supplier": "Kho hạt rang trung tâm",
+    "note": "Nhập bổ sung đầu tuần",
+    "employeeUsername": "admin",
+    "employeeFullName": "Lê Văn Admin"
+  },
+  {
+    "id": "NH-002",
+    "receiptDate": "2026-04-22",
+    "productId": "SP-004",
+    "productName": "Bánh Croissant Bơ",
+    "quantity": 15,
+    "unitCost": 17000,
+    "totalCost": 255000,
+    "supplier": "Xưởng bánh đối tác",
+    "note": "Nhập sáng",
+    "employeeUsername": "manager",
+    "employeeFullName": "Nguyễn Thị Manager"
+  }
+]

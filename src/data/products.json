@@ -1,0 +1,42 @@
+[
+  {
+    "id": "SP-001",
+    "name": "Cà phê sữa đá",
+    "category": "Cà phê truyền thống",
+    "price": 32000,
+    "cost": 16000,
+    "stock": 90,
+    "unit": "ly",
+    "status": "Đang bán"
+  },
+  {
+    "id": "SP-002",
+    "name": "Cold Brew Cam",
+    "category": "Signature",
+    "price": 58000,
+    "cost": 29000,
+    "stock": 40,
+    "unit": "ly",
+    "status": "Đang bán"
+  },
+  {
+    "id": "SP-003",
+    "name": "Latte Hạt Dẻ",
+    "category": "Seasonal",
+    "price": 62000,
+    "cost": 31000,
+    "stock": 28,
+    "unit": "ly",
+    "status": "Đang bán"
+  },
+  {
+    "id": "SP-004",
+    "name": "Bánh Croissant Bơ",
+    "category": "Bakery",
+    "price": 35000,
+    "cost": 18000,
+    "stock": 24,
+    "unit": "cái",
+    "status": "Đang bán"
+  }
+]

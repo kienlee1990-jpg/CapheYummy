@@ -1,0 +1,54 @@
+[
+  {
+    "id": "DH-001",
+    "orderDate": "2026-04-22",
+    "customerName": "Khách lẻ",
+    "employeeUsername": "admin",
+    "employeeFullName": "Lê Văn Admin",
+    "status": "Hoàn tất",
+    "note": "Đơn tại quầy",
+    "total": 157000,
+    "items": [
+      {
+        "productId": "SP-001",
+        "productName": "Cà phê sữa đá",
+        "quantity": 2,
+        "price": 32000,
+        "subtotal": 64000
+      },
+      {
+        "productId": "SP-004",
+        "productName": "Bánh Croissant Bơ",
+        "quantity": 1,
+        "price": 35000,
+        "subtotal": 35000
+      },
+      {
+        "productId": "SP-002",
+        "productName": "Cold Brew Cam",
+        "quantity": 1,
+        "price": 58000,
+        "subtotal": 58000
+      }
+    ]
+  },
+  {
+    "id": "DH-002",
+    "orderDate": "2026-04-23",
+    "customerName": "Phạm Minh",
+    "employeeUsername": "manager",
+    "employeeFullName": "Nguyễn Thị Manager",
+    "status": "Hoàn tất",
+    "note": "Mang đi",
+    "total": 124000,
+    "items": [
+      {
+        "productId": "SP-003",
+        "productName": "Latte Hạt Dẻ",
+        "quantity": 2,
+        "price": 62000,
+        "subtotal": 124000
+      }
+    ]
+  }
+]
