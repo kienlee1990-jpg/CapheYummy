@@ -30,7 +30,7 @@ const navigationItems = [
 ];
 
 const userInitials = computed(() => {
-  if (!currentUser.value?.fullName) return "CF";
+  if (!currentUser.value?.fullName) return "YY";
 
   return currentUser.value.fullName
     .split(" ")
@@ -61,9 +61,9 @@ const isActiveRoute = (path) => route.path === path;
   <div class="admin-layout" :class="{ 'sidebar-open': mobileSidebarOpen }">
     <aside class="sidebar">
       <div class="sidebar__brand">
-        <div class="sidebar__logo">A</div>
+        <div class="sidebar__logo">Y</div>
         <div>
-          <strong>Arlo Coffee</strong>
+          <strong>Cà Phê Yummy</strong>
           <p>Quản trị cửa hàng</p>
         </div>
       </div>
@@ -99,7 +99,7 @@ const isActiveRoute = (path) => route.path === path;
           </button>
 
           <div>
-            <p class="topbar__eyebrow">Hệ thống quản lý quán cà phê</p>
+            <p class="topbar__eyebrow">Hệ thống quản lý Cà Phê Yummy</p>
             <h1>{{ pageTitle }}</h1>
             <span class="topbar__meta">{{ sidebarNote }}</span>
           </div>

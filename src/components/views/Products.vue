@@ -14,6 +14,7 @@ const createDefaultForm = () => ({
   stock: "",
   unit: "ly",
   status: "Đang bán",
+  imageUrl: "/menu/cafe-sua.svg",
 });
 
 const form = ref(createDefaultForm());
@@ -47,6 +48,7 @@ const handleEdit = (product) => {
     stock: product.stock,
     unit: product.unit,
     status: product.status,
+    imageUrl: product.imageUrl || "/menu/cafe-sua.svg",
   };
 };
 
@@ -81,12 +83,17 @@ const handleDelete = (product) => {
         <form class="resource-form" @submit.prevent="handleSubmit">
           <label class="form-field">
             <span>Tên sản phẩm</span>
-            <input v-model="form.name" type="text" placeholder="Ví dụ: Cold Brew Cam" required />
+            <input v-model="form.name" type="text" placeholder="Ví dụ: Cà phê đen" required />
           </label>
 
           <label class="form-field">
             <span>Danh mục</span>
-            <input v-model="form.category" type="text" placeholder="Ví dụ: Signature" required />
+            <input v-model="form.category" type="text" placeholder="Ví dụ: Cà phê đậm đà" required />
+          </label>
+
+          <label class="form-field">
+            <span>Ảnh sản phẩm</span>
+            <input v-model="form.imageUrl" type="text" placeholder="/menu/cafe-sua.svg" />
           </label>
 
           <div class="form-row">
@@ -146,6 +153,7 @@ const handleDelete = (product) => {
             <thead>
               <tr>
                 <th>Tên sản phẩm</th>
+                <th>Ảnh</th>
                 <th>Danh mục</th>
                 <th>Giá bán</th>
                 <th>Tồn kho</th>
@@ -157,6 +165,9 @@ const handleDelete = (product) => {
               <tr v-for="product in products" :key="product.id">
                 <td>
                   <strong>{{ product.name }}</strong>
+                </td>
+                <td>
+                  <img class="product-table-image" :src="product.imageUrl" :alt="product.name" />
                 </td>
                 <td>{{ product.category }}</td>
                 <td>{{ formatCurrency(product.price) }}</td>

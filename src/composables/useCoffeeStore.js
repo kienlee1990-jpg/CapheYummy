@@ -5,11 +5,21 @@ import productsSeed from "../data/products.json";
 import usersSeed from "../data/users.json";
 
 const STORAGE_KEYS = {
+  auth: "ca-phe-yummy-auth-user",
+  products: "ca-phe-yummy-products",
+  orders: "ca-phe-yummy-orders",
+  inventory: "ca-phe-yummy-inventory",
+};
+
+const LEGACY_STORAGE_KEYS = {
   auth: "arlo-coffee-auth-user",
   products: "arlo-coffee-products",
   orders: "arlo-coffee-orders",
   inventory: "arlo-coffee-inventory",
 };
+
+const MENU_STORAGE_VERSION_KEY = "ca-phe-yummy-menu-version";
+const MENU_STORAGE_VERSION = "2026-05-yummy-menu-v2";
 
 const cloneData = (value) => JSON.parse(JSON.stringify(value));
 
@@ -26,6 +36,26 @@ const readStorage = (key, fallbackValue) => {
   } catch {
     return cloneData(fallbackValue);
   }
+};
+
+const readMigratedStorage = (key, legacyKey, fallbackValue) => {
+  if (!canUseStorage()) {
+    return cloneData(fallbackValue);
+  }
+
+  const currentValue = window.localStorage.getItem(key);
+  if (currentValue) {
+    return readStorage(key, fallbackValue);
+  }
+
+  const legacyValue = window.localStorage.getItem(legacyKey);
+  if (!legacyValue) {
+    return cloneData(fallbackValue);
+  }
+
+  window.localStorage.setItem(key, legacyValue);
+  window.localStorage.removeItem(legacyKey);
+  return readStorage(key, fallbackValue);
 };
 
 const writeStorage = (key, value) => {
@@ -49,15 +79,67 @@ const toNumber = (value) => {
 
 const state = reactive({
   users: cloneData(usersSeed),
-  currentUser: readStorage(STORAGE_KEYS.auth, null),
-  products: readStorage(STORAGE_KEYS.products, productsSeed),
-  orders: readStorage(STORAGE_KEYS.orders, ordersSeed),
-  inventoryReceipts: readStorage(STORAGE_KEYS.inventory, inventorySeed),
+  currentUser: readMigratedStorage(STORAGE_KEYS.auth, LEGACY_STORAGE_KEYS.auth, null),
+  products: readMigratedStorage(STORAGE_KEYS.products, LEGACY_STORAGE_KEYS.products, productsSeed),
+  orders: readMigratedStorage(STORAGE_KEYS.orders, LEGACY_STORAGE_KEYS.orders, ordersSeed),
+  inventoryReceipts: readMigratedStorage(
+    STORAGE_KEYS.inventory,
+    LEGACY_STORAGE_KEYS.inventory,
+    inventorySeed
+  ),
 });
+
+const ADMIN_USER = usersSeed[0];
+
+const normalizeAdminUser = () => {
+  if (state.currentUser?.username === ADMIN_USER.username) {
+    state.currentUser = {
+      fullName: ADMIN_USER.fullName,
+      username: ADMIN_USER.username,
+    };
+    writeStorage(STORAGE_KEYS.auth, state.currentUser);
+  }
+
+  state.orders.forEach((order) => {
+    if (["admin", "manager"].includes(order.employeeUsername)) {
+      order.employeeUsername = ADMIN_USER.username;
+      order.employeeFullName = ADMIN_USER.fullName;
+    }
+  });
+
+  state.inventoryReceipts.forEach((receipt) => {
+    if (["admin", "manager"].includes(receipt.employeeUsername)) {
+      receipt.employeeUsername = ADMIN_USER.username;
+      receipt.employeeFullName = ADMIN_USER.fullName;
+    }
+  });
+
+  persistOrders();
+  persistInventory();
+};
 
 const persistProducts = () => writeStorage(STORAGE_KEYS.products, state.products);
 const persistOrders = () => writeStorage(STORAGE_KEYS.orders, state.orders);
 const persistInventory = () => writeStorage(STORAGE_KEYS.inventory, state.inventoryReceipts);
+
+const resetMenuIfNeeded = () => {
+  if (!canUseStorage()) return;
+
+  const currentVersion = window.localStorage.getItem(MENU_STORAGE_VERSION_KEY);
+  if (currentVersion === MENU_STORAGE_VERSION) return;
+
+  state.products = cloneData(productsSeed);
+  state.orders = cloneData(ordersSeed);
+  state.inventoryReceipts = cloneData(inventorySeed);
+
+  persistProducts();
+  persistOrders();
+  persistInventory();
+  window.localStorage.setItem(MENU_STORAGE_VERSION_KEY, MENU_STORAGE_VERSION);
+};
+
+resetMenuIfNeeded();
+normalizeAdminUser();
 
 const getUserByUsername = (username) => state.users.find((user) => user.username === username);
 const getProductById = (productId) => state.products.find((product) => product.id === productId);
@@ -100,6 +182,7 @@ const addProduct = (payload) => {
     stock: toNumber(payload.stock),
     unit: payload.unit.trim() || "ly",
     status: payload.status || "Đang bán",
+    imageUrl: payload.imageUrl?.trim() || "/menu/cafe-sua.svg",
     createdAt: new Date().toISOString(),
   };
 
@@ -130,6 +213,7 @@ const updateProduct = (productId, payload) => {
     stock: toNumber(payload.stock),
     unit: payload.unit.trim() || "ly",
     status: payload.status || "Đang bán",
+    imageUrl: payload.imageUrl?.trim() || state.products[index].imageUrl || "/menu/cafe-sua.svg",
     updatedAt: new Date().toISOString(),
   };
 
@@ -275,6 +359,33 @@ const addOrder = (payload) => {
   };
 };
 
+const removeOrder = (orderId) => {
+  const order = state.orders.find((item) => item.id === orderId);
+
+  if (!order) {
+    return {
+      success: false,
+      message: "Không tìm thấy hóa đơn cần xóa.",
+    };
+  }
+
+  order.items.forEach((item) => {
+    const product = getProductById(item.productId);
+    if (product) {
+      product.stock += toNumber(item.quantity);
+    }
+  });
+
+  state.orders = state.orders.filter((item) => item.id !== orderId);
+  persistOrders();
+  persistProducts();
+
+  return {
+    success: true,
+    message: "Đã xóa hóa đơn và hoàn lại tồn kho.",
+  };
+};
+
 const getRevenueReport = ({ fromDate, toDate, employeeUsername }) => {
   const fromTime = fromDate ? new Date(`${fromDate}T00:00:00`).getTime() : null;
   const toTime = toDate ? new Date(`${toDate}T23:59:59`).getTime() : null;
@@ -366,6 +477,7 @@ export function useCoffeeStore() {
     removeProduct,
     addInventoryReceipt,
     addOrder,
+    removeOrder,
     getRevenueReport,
   };
 }

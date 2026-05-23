@@ -29,14 +29,16 @@ const handleSubmit = () => {
     return;
   }
 
-  router.push("/dashboard");
+  router.push("/dashboard").finally(() => {
+    isSubmitting.value = false;
+  });
 };
 </script>
 
 <template>
   <div class="login-page">
     <section class="login-hero">
-      <p class="login-hero__eyebrow">Arlo Coffee Admin</p>
+      <p class="login-hero__eyebrow">Cà Phê Yummy Admin</p>
       <h1>Đăng nhập để quản lý sản phẩm, đơn hàng và báo cáo doanh thu.</h1>
       <p>
         Dữ liệu được seed từ các file JSON trong <code>src/data</code> và lưu phiên làm việc

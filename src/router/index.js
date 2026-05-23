@@ -7,7 +7,34 @@ import Orders from "../components/views/Orders.vue";
 import Products from "../components/views/Products.vue";
 import Reports from "../components/views/Reports.vue";
 
-const AUTH_STORAGE_KEY = "arlo-coffee-auth-user";
+const AUTH_STORAGE_KEY = "ca-phe-yummy-auth-user";
+const LEGACY_AUTH_STORAGE_KEY = "arlo-coffee-auth-user";
+
+const getAuthUser = () => {
+  const authUser = localStorage.getItem(AUTH_STORAGE_KEY);
+  if (authUser) {
+    try {
+      JSON.parse(authUser);
+      return authUser;
+    } catch {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
+  }
+
+  const legacyAuthUser = localStorage.getItem(LEGACY_AUTH_STORAGE_KEY);
+  if (!legacyAuthUser) return null;
+
+  try {
+    JSON.parse(legacyAuthUser);
+  } catch {
+    localStorage.removeItem(LEGACY_AUTH_STORAGE_KEY);
+    return null;
+  }
+
+  localStorage.setItem(AUTH_STORAGE_KEY, legacyAuthUser);
+  localStorage.removeItem(LEGACY_AUTH_STORAGE_KEY);
+  return legacyAuthUser;
+};
 
 const routes = [
   {
@@ -82,7 +109,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const authUser = localStorage.getItem(AUTH_STORAGE_KEY);
+  const authUser = getAuthUser();
   const isAuthenticated = Boolean(authUser);
 
   if (to.meta.requiresAuth && !isAuthenticated) {

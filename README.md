@@ -1,6 +1,6 @@
-# Arlo Coffee Vue UI
+# Cà Phê Yummy Vue UI
 
-Ứng dụng Vue + Vite quản lý quán cà phê với các luồng:
+Ứng dụng Vue + Vite quản lý Cà Phê Yummy với các luồng:
 
 - đăng nhập bằng dữ liệu JSON
 - bán hàng

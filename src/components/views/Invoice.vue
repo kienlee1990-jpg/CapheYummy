@@ -1,12 +1,13 @@
 <script setup>
 import { computed } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import BaseLayout from "../BaseLayout.vue";
 import { useCoffeeStore } from "../../composables/useCoffeeStore";
 import { formatCurrency, formatDate } from "../../utils/formatters";
 
 const route = useRoute();
-const { orders } = useCoffeeStore();
+const router = useRouter();
+const { orders, removeOrder } = useCoffeeStore();
 
 const selectedOrderId = computed(() => route.params.id || orders.value[0]?.id || "");
 
@@ -28,6 +29,18 @@ const totalQuantity = computed(() =>
 
 const handlePrint = () => {
   window.print();
+};
+
+const handleDeleteInvoice = () => {
+  if (!selectedOrder.value) return;
+
+  const confirmed = window.confirm(`Xóa hóa đơn ${selectedOrder.value.id}? Tồn kho sẽ được hoàn lại.`);
+  if (!confirmed) return;
+
+  const response = removeOrder(selectedOrder.value.id);
+  if (!response.success) return;
+
+  router.push(orders.value[0] ? `/hoa-don/${orders.value[0].id}` : "/hoa-don");
 };
 </script>
 
@@ -68,8 +81,8 @@ const handlePrint = () => {
           <div class="invoice-sheet__header">
             <div>
               <p class="panel__eyebrow">Hóa đơn bán hàng</p>
-              <h2>Arlo Coffee</h2>
-              <p class="page-copy">Cửa hàng cà phê · Hệ thống quản lý bán hàng</p>
+              <h2>Cà Phê Yummy</h2>
+              <p class="page-copy">Cửa hàng cà phê Yummy · Hệ thống quản lý bán hàng</p>
             </div>
             <div class="invoice-sheet__meta">
               <strong>{{ selectedOrder.id }}</strong>
@@ -139,6 +152,7 @@ const handlePrint = () => {
 
           <div class="inline-actions no-print">
             <button type="button" class="button-primary" @click="handlePrint">In hóa đơn</button>
+            <button type="button" class="button-danger" @click="handleDeleteInvoice">Xóa hóa đơn</button>
             <RouterLink class="button-secondary invoice-link-button" to="/ban-hang">
               Quay lại bán hàng
             </RouterLink>

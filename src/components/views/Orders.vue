@@ -10,6 +10,7 @@ const { addOrder, currentUser, orders, products, users } = useCoffeeStore();
 const searchKeyword = ref("");
 const selectedCategory = ref("Tất cả");
 const feedback = ref("");
+const activeOrderTab = ref("Hóa đơn 1");
 
 const createOrderForm = () => ({
   orderDate: new Date().toISOString().slice(0, 10),
@@ -70,6 +71,8 @@ const totalQuantity = computed(() =>
 
 const recentOrders = computed(() => orders.value.slice(0, 6));
 
+const cartLineCount = computed(() => cartItems.value.length);
+
 const addToCart = (product) => {
   const foundItem = form.value.items.find((item) => item.productId === product.id);
 
@@ -125,23 +128,87 @@ const handleSubmit = () => {
     page-title="Bán hàng"
     page-description="Tạo order tại quầy, chọn món nhanh, theo dõi giỏ hàng và lưu lịch sử đơn."
   >
-    <section class="content-grid content-grid--sales">
-      <article class="panel">
-        <div class="panel__header">
-          <div>
-            <p class="panel__eyebrow">Menu bán hàng</p>
-            <h2>Chọn món cho order</h2>
-          </div>
-          <span class="summary-chip">{{ filteredProducts.length }} sản phẩm hiển thị</span>
+    <section class="pos-shell">
+      <form class="pos-cart" @submit.prevent="handleSubmit">
+        <div class="pos-tabs">
+          <button type="button" class="pos-tab is-active">{{ activeOrderTab }}</button>
+          <button type="button" class="pos-tab" @click="resetForm">+ Hóa đơn mới</button>
         </div>
 
-        <div class="sales-toolbar">
-          <label class="form-field">
-            <span>Tìm sản phẩm</span>
-            <input v-model="searchKeyword" type="text" placeholder="Nhập tên món..." />
+        <div class="pos-customer">
+          <label class="pos-search">
+            <span>Tìm khách hàng</span>
+            <input v-model="form.customerName" type="text" placeholder="Khách lẻ / tên khách" />
           </label>
+          <span class="summary-chip">{{ totalQuantity }} món</span>
+        </div>
 
-          <label class="form-field">
+        <div class="pos-cart-list">
+          <div v-for="(item, index) in cartItems" :key="item.productId" class="pos-cart-row">
+            <div class="pos-cart-row__index">{{ index + 1 }}</div>
+            <div class="pos-cart-row__name">
+              <strong>{{ item.product?.name }}</strong>
+              <span>{{ formatCurrency(item.product?.price || 0) }} / {{ item.product?.unit }}</span>
+            </div>
+
+            <div class="pos-qty">
+              <button type="button" @click="decreaseQuantity(item.productId)">-</button>
+              <span>{{ item.quantity }}</span>
+              <button type="button" @click="increaseQuantity(item.productId)">+</button>
+            </div>
+
+            <strong class="pos-cart-row__total">{{ formatCurrency(item.subtotal) }}</strong>
+            <button type="button" class="pos-row-delete" @click="removeFromCart(item.productId)">×</button>
+          </div>
+
+          <div v-if="cartItems.length === 0" class="pos-empty">
+            Chọn sản phẩm bên phải để thêm vào hóa đơn.
+          </div>
+        </div>
+
+        <div class="pos-cart-meta">
+          <label>
+            <span>Ngày bán</span>
+            <input v-model="form.orderDate" type="date" required />
+          </label>
+          <label>
+            <span>Nhân viên</span>
+            <select v-model="form.employeeUsername" required>
+              <option v-for="user in users" :key="user.username" :value="user.username">
+                {{ user.fullName }}
+              </option>
+            </select>
+          </label>
+          <label class="pos-note">
+            <span>Ghi chú</span>
+            <input v-model="form.note" type="text" placeholder="Ghi chú hóa đơn" />
+          </label>
+        </div>
+
+        <div class="pos-checkout">
+          <div>
+            <span>Tổng tiền hàng</span>
+            <strong>{{ formatCurrency(cartTotal) }}</strong>
+          </div>
+          <div>
+            <span>Số dòng</span>
+            <strong>{{ cartLineCount }}</strong>
+          </div>
+          <button type="submit" class="pos-pay-button" :disabled="cartItems.length === 0">
+            Thanh toán
+          </button>
+        </div>
+
+        <p v-if="feedback" class="form-feedback">{{ feedback }}</p>
+      </form>
+
+      <article class="pos-products">
+        <div class="pos-products__toolbar">
+          <label class="pos-search">
+            <span>Tìm hàng hóa</span>
+            <input v-model="searchKeyword" type="text" placeholder="Tìm hàng hóa..." />
+          </label>
+          <label class="pos-category">
             <span>Danh mục</span>
             <select v-model="selectedCategory">
               <option v-for="category in categories" :key="category" :value="category">
@@ -151,110 +218,39 @@ const handleSubmit = () => {
           </label>
         </div>
 
-        <div class="product-grid">
+        <div class="pos-category-tabs">
+          <button
+            v-for="category in categories"
+            :key="category"
+            type="button"
+            :class="{ 'is-active': selectedCategory === category }"
+            @click="selectedCategory = category"
+          >
+            {{ category }}
+          </button>
+        </div>
+
+        <div class="pos-product-grid">
           <button
             v-for="product in filteredProducts"
             :key="product.id"
             type="button"
-            class="product-card"
+            class="pos-product-card"
             @click="addToCart(product)"
           >
-            <div class="product-card__top">
-              <span class="status-badge">{{ product.category }}</span>
-              <span class="product-card__stock">Tồn {{ product.stock }} {{ product.unit }}</span>
-            </div>
-            <div class="product-card__body">
+            <img
+              class="pos-product-card__thumb"
+              :src="product.imageUrl"
+              :alt="product.name"
+              loading="lazy"
+            />
+            <div>
               <strong>{{ product.name }}</strong>
-              <p>{{ product.status }}</p>
-            </div>
-            <div class="product-card__bottom">
               <span>{{ formatCurrency(product.price) }}</span>
-              <small>Nhấn để thêm</small>
+              <small>Tồn {{ product.stock }} {{ product.unit }}</small>
             </div>
           </button>
         </div>
-      </article>
-
-      <article class="panel panel--accent">
-        <div class="panel__header">
-          <div>
-            <p class="panel__eyebrow">Order hiện tại</p>
-            <h2>Giỏ hàng</h2>
-          </div>
-          <span class="summary-chip">{{ totalQuantity }} món</span>
-        </div>
-
-        <form class="resource-form" @submit.prevent="handleSubmit">
-          <div class="form-row">
-            <label class="form-field">
-              <span>Ngày bán</span>
-              <input v-model="form.orderDate" type="date" required />
-            </label>
-
-            <label class="form-field">
-              <span>Nhân viên</span>
-              <select v-model="form.employeeUsername" required>
-                <option v-for="user in users" :key="user.username" :value="user.username">
-                  {{ user.fullName }}
-                </option>
-              </select>
-            </label>
-          </div>
-
-          <label class="form-field">
-            <span>Khách hàng</span>
-            <input v-model="form.customerName" type="text" placeholder="Khách lẻ / tên khách" />
-          </label>
-
-          <div class="cart-list">
-            <div v-for="item in cartItems" :key="item.productId" class="cart-row">
-              <div>
-                <strong>{{ item.product?.name }}</strong>
-                <p>{{ formatCurrency(item.product?.price || 0) }} / {{ item.product?.unit }}</p>
-              </div>
-
-              <div class="cart-row__actions">
-                <button type="button" class="qty-button" @click="decreaseQuantity(item.productId)">-</button>
-                <span>{{ item.quantity }}</span>
-                <button type="button" class="qty-button" @click="increaseQuantity(item.productId)">+</button>
-              </div>
-
-              <div class="cart-row__meta">
-                <span>{{ formatCurrency(item.subtotal) }}</span>
-                <button type="button" class="button-danger" @click="removeFromCart(item.productId)">
-                  Xóa
-                </button>
-              </div>
-            </div>
-
-            <div v-if="cartItems.length === 0" class="empty-state">
-              Chưa có món nào trong order. Hãy chọn sản phẩm ở cột bên trái.
-            </div>
-          </div>
-
-          <label class="form-field">
-            <span>Ghi chú</span>
-            <textarea v-model="form.note" rows="3" placeholder="Ghi chú thêm cho order"></textarea>
-          </label>
-
-          <div class="checkout-box">
-            <div>
-              <span>Tổng thanh toán</span>
-              <strong>{{ formatCurrency(cartTotal) }}</strong>
-            </div>
-            <div>
-              <span>Số dòng món</span>
-              <strong>{{ cartItems.length }}</strong>
-            </div>
-          </div>
-
-          <p v-if="feedback" class="form-feedback">{{ feedback }}</p>
-
-          <div class="inline-actions">
-            <button type="submit" class="button-primary">Hoàn tất order</button>
-            <button type="button" class="button-secondary" @click="resetForm">Làm mới giỏ hàng</button>
-          </div>
-        </form>
       </article>
     </section>
 

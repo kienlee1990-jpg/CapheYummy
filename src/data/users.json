@@ -1,12 +1,7 @@
 [
   {
-    "fullName": "Lê Văn Admin",
+    "fullName": "Nguyễn Phạm Xuân Diệu",
     "username": "admin",
     "password": "123456"
-  },
-  {
-    "fullName": "Nguyễn Thị Manager",
-    "username": "manager",
-    "password": "coffee123"
   }
 ]
