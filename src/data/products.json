@@ -8,7 +8,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/cafe-den.svg"
+    "imageUrl": "menu/cafe-den.svg"
   },
   {
     "id": "SP-002",
@@ -19,7 +19,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/cafe-sua.svg"
+    "imageUrl": "menu/cafe-sua.svg"
   },
   {
     "id": "SP-003",
@@ -30,7 +30,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/cafe-den-sai-gon.svg"
+    "imageUrl": "menu/cafe-den-sai-gon.svg"
   },
   {
     "id": "SP-004",
@@ -41,7 +41,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/cafe-sua-sai-gon.svg"
+    "imageUrl": "menu/cafe-sua-sai-gon.svg"
   },
   {
     "id": "SP-005",
@@ -52,7 +52,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/bac-xiu.svg"
+    "imageUrl": "menu/bac-xiu.svg"
   },
   {
     "id": "SP-006",
@@ -63,7 +63,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/cafe-kem-muoi.svg"
+    "imageUrl": "menu/cafe-kem-muoi.svg"
   },
   {
     "id": "SP-007",
@@ -74,7 +74,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/cacao-nong-da.svg"
+    "imageUrl": "menu/cacao-nong-da.svg"
   },
   {
     "id": "SP-008",
@@ -85,7 +85,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/cacao-muoi.svg"
+    "imageUrl": "menu/cacao-muoi.svg"
   },
   {
     "id": "SP-009",
@@ -96,7 +96,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/matcha-latte.svg"
+    "imageUrl": "menu/matcha-latte.svg"
   },
   {
     "id": "SP-010",
@@ -107,7 +107,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/matcha-kem-muoi.svg"
+    "imageUrl": "menu/matcha-kem-muoi.svg"
   },
   {
     "id": "SP-011",
@@ -118,7 +118,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/tra-tac.svg"
+    "imageUrl": "menu/tra-tac.svg"
   },
   {
     "id": "SP-012",
@@ -129,7 +129,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/tra-oi.svg"
+    "imageUrl": "menu/tra-oi.svg"
   },
   {
     "id": "SP-013",
@@ -140,7 +140,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/nuoc-ep-cam.svg"
+    "imageUrl": "menu/nuoc-ep-cam.svg"
   },
   {
     "id": "SP-014",
@@ -151,7 +151,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/nuoc-ep-chanh.svg"
+    "imageUrl": "menu/nuoc-ep-chanh.svg"
   },
   {
     "id": "SP-015",
@@ -162,7 +162,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/sua-chua-viet-quat.svg"
+    "imageUrl": "menu/sua-chua-viet-quat.svg"
   },
   {
     "id": "SP-016",
@@ -173,7 +173,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/sua-chua-da-dap.svg"
+    "imageUrl": "menu/sua-chua-da-dap.svg"
   },
   {
     "id": "SP-017",
@@ -184,7 +184,7 @@
     "stock": 100,
     "unit": "ly",
     "status": "Đang bán",
-    "imageUrl": "/menu/tra-oi-size-l.svg"
+    "imageUrl": "menu/tra-oi-size-l.svg"
   },
   {
     "id": "SP-018",
@@ -195,6 +195,6 @@
     "stock": 100,
     "unit": "hộp",
     "status": "Đang bán",
-    "imageUrl": "/menu/sua-chua-hop.svg"
+    "imageUrl": "menu/sua-chua-hop.svg"
   }
 ]

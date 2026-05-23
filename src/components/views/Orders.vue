@@ -73,6 +73,13 @@ const recentOrders = computed(() => orders.value.slice(0, 6));
 
 const cartLineCount = computed(() => cartItems.value.length);
 
+const resolveAssetUrl = (path) => {
+  if (!path) return "";
+  if (/^(https?:|data:|blob:)/.test(path)) return path;
+
+  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+};
+
 const addToCart = (product) => {
   const foundItem = form.value.items.find((item) => item.productId === product.id);
 
@@ -240,7 +247,7 @@ const handleSubmit = () => {
           >
             <img
               class="pos-product-card__thumb"
-              :src="product.imageUrl"
+              :src="resolveAssetUrl(product.imageUrl)"
               :alt="product.name"
               loading="lazy"
             />

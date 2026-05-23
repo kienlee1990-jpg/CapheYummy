@@ -14,12 +14,19 @@ const createDefaultForm = () => ({
   stock: "",
   unit: "ly",
   status: "Đang bán",
-  imageUrl: "/menu/cafe-sua.svg",
+  imageUrl: "menu/cafe-sua.svg",
 });
 
 const form = ref(createDefaultForm());
 const editingId = ref("");
 const feedback = ref("");
+
+const resolveAssetUrl = (path) => {
+  if (!path) return "";
+  if (/^(https?:|data:|blob:)/.test(path)) return path;
+
+  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+};
 
 const resetForm = () => {
   form.value = createDefaultForm();
@@ -48,7 +55,7 @@ const handleEdit = (product) => {
     stock: product.stock,
     unit: product.unit,
     status: product.status,
-    imageUrl: product.imageUrl || "/menu/cafe-sua.svg",
+    imageUrl: product.imageUrl || "menu/cafe-sua.svg",
   };
 };
 
@@ -93,7 +100,7 @@ const handleDelete = (product) => {
 
           <label class="form-field">
             <span>Ảnh sản phẩm</span>
-            <input v-model="form.imageUrl" type="text" placeholder="/menu/cafe-sua.svg" />
+            <input v-model="form.imageUrl" type="text" placeholder="menu/cafe-sua.svg" />
           </label>
 
           <div class="form-row">
@@ -167,7 +174,11 @@ const handleDelete = (product) => {
                   <strong>{{ product.name }}</strong>
                 </td>
                 <td>
-                  <img class="product-table-image" :src="product.imageUrl" :alt="product.name" />
+                  <img
+                    class="product-table-image"
+                    :src="resolveAssetUrl(product.imageUrl)"
+                    :alt="product.name"
+                  />
                 </td>
                 <td>{{ product.category }}</td>
                 <td>{{ formatCurrency(product.price) }}</td>

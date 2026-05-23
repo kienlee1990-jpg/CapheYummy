@@ -19,7 +19,7 @@ const LEGACY_STORAGE_KEYS = {
 };
 
 const MENU_STORAGE_VERSION_KEY = "ca-phe-yummy-menu-version";
-const MENU_STORAGE_VERSION = "2026-05-yummy-menu-v2";
+const MENU_STORAGE_VERSION = "2026-05-yummy-menu-v3";
 
 const cloneData = (value) => JSON.parse(JSON.stringify(value));
 
@@ -182,7 +182,7 @@ const addProduct = (payload) => {
     stock: toNumber(payload.stock),
     unit: payload.unit.trim() || "ly",
     status: payload.status || "Đang bán",
-    imageUrl: payload.imageUrl?.trim() || "/menu/cafe-sua.svg",
+    imageUrl: payload.imageUrl?.trim() || "menu/cafe-sua.svg",
     createdAt: new Date().toISOString(),
   };
 
@@ -213,7 +213,7 @@ const updateProduct = (productId, payload) => {
     stock: toNumber(payload.stock),
     unit: payload.unit.trim() || "ly",
     status: payload.status || "Đang bán",
-    imageUrl: payload.imageUrl?.trim() || state.products[index].imageUrl || "/menu/cafe-sua.svg",
+    imageUrl: payload.imageUrl?.trim() || state.products[index].imageUrl || "menu/cafe-sua.svg",
     updatedAt: new Date().toISOString(),
   };
 
